@@ -51,6 +51,32 @@ import Maybe exposing (..)
     withDefault x mx
 
 
+{-| Flipped, infix version of `map`.
+
+    Just { x = 2 } ?> .x == Just 2
+    Nothing ?> .x == Nothing
+-}
+(?>) : Maybe a -> (a -> b) -> Maybe b
+(?>) m f =
+    Maybe.map f m
+
+
+{-| Flipped, infix version of `map` that flattens nested `Maybe`s.
+
+    Just { x = Just 2 } ??> .x == Just 2
+    Just { x = Nothing } ??> .x == Nothing
+    Nothing ??> .x == Nothing
+-}
+(??>) : Maybe a -> (a -> Maybe b) -> Maybe b
+(??>) m f =
+    case Maybe.map f m of
+        Just x ->
+            x
+
+        Nothing ->
+            Nothing
+
+
 {-| Flattens nested `Maybe`s
 
     join (Just (Just 1)) == Just 1
